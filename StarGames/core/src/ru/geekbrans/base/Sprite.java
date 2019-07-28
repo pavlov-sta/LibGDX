@@ -58,6 +58,9 @@ public abstract class Sprite extends Rect {
         );
     }
 
+    public void dispose() {
+    }
+
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         return false;
     }
@@ -93,4 +96,5 @@ public abstract class Sprite extends Rect {
     public boolean isDestroyed() {
         return destroyed;
     }
+
 }

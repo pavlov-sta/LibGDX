@@ -1,6 +1,7 @@
 package ru.geekbrans.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -26,12 +27,13 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
 
     private Star[] starArray;
-    private MainShip ship;
-
+    private MainShip mainShip;
+    private Music music;
 
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         bg = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bg));
@@ -40,7 +42,10 @@ public class GameScreen extends BaseScreen {
             starArray[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        ship = new MainShip(atlas, bulletPool);
+        mainShip = new MainShip(atlas, bulletPool);
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
     }
 
     @Override
@@ -58,7 +63,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         freeAllDestroyedActiveSprites();
-        ship.resize(worldBounds);
+        mainShip.resize(worldBounds);
     }
 
     @Override
@@ -66,6 +71,9 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bg.dispose();
         bulletPool.dispose();
+        //enemyPool.dispose();
+        music.dispose();
+        mainShip.dispose();
         super.dispose();
     }
 
@@ -74,7 +82,7 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         bulletPool.updateActiveSprites(delta);
-        ship.update(delta);
+        mainShip.update(delta);
     }
 
     private void freeAllDestroyedActiveSprites() {
@@ -89,20 +97,20 @@ public class GameScreen extends BaseScreen {
         for (Star star:starArray) {
             star.draw(batch);
         }
-        ship.draw(batch);
+        mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        ship.keyDown(keycode);
+        mainShip.keyDown(keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        ship.keyUp(keycode);
+        mainShip.keyUp(keycode);
         return false;
     }
 }
