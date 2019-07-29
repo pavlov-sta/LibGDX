@@ -1,18 +1,16 @@
 package ru.geekbrans.base;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public abstract class SpritesPool<T extends Sprite> {
 
     protected final List<T> activeObjects = new ArrayList<T>();
     protected final List<T> freeObjects = new ArrayList<T>();
 
-    Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
 
     protected abstract T newObject();
@@ -24,8 +22,7 @@ public abstract class SpritesPool<T extends Sprite> {
             object = freeObjects.remove(freeObjects.size() - 1);
         }
         activeObjects.add(object);
-        System.out.println(this.getClass().getName() + " active/free:" + activeObjects.size() + "/" + freeObjects.size());
-        sound.play();
+        //System.out.println(this.getClass().getName() + " active/free:" + activeObjects.size() + "/" + freeObjects.size());
         return object;
     }
 
@@ -45,6 +42,15 @@ public abstract class SpritesPool<T extends Sprite> {
         }
     }
 
+    public void disposeAllSprites() {
+        for (T sprite: activeObjects) {
+            sprite.dispose();
+        }
+        for (T sprite: freeObjects) {
+            sprite.dispose();
+        }
+    }
+
     public void freeAllDestroyedActiveSprites() {
         for (int i = 0; i < activeObjects.size(); i++) {
             T sprite = activeObjects.get(i);
@@ -54,7 +60,7 @@ public abstract class SpritesPool<T extends Sprite> {
                 }
                 i--;
                 sprite.flushDestroy();
-                System.out.println(this.getClass().getName() + " active/free:" + activeObjects.size() + "/" + freeObjects.size());
+                //System.out.println(this.getClass().getName() + " active/free:" + activeObjects.size() + "/" + freeObjects.size());
             }
         }
     }
@@ -64,6 +70,7 @@ public abstract class SpritesPool<T extends Sprite> {
     }
 
     public void dispose() {
+        disposeAllSprites();
         activeObjects.clear();
         freeObjects.clear();
     }

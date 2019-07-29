@@ -16,7 +16,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     private Rect screenBounds;
-    private Rect worldBounds;
+    protected Rect worldBounds;
     private Rect glBounds;
 
     private Matrix4 worldToGl;
@@ -58,7 +58,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public void resize(Rect worldBounds) {
-        System.out.println("resize worldBounds.width = " + worldBounds.getWidth() + " worldBounds.height = " + worldBounds.getHeight());
+        System.out.println("resize worldBounds.width = " + worldBounds.getWidth() + " worldBounds.height5 = " + worldBounds.getHeight());
     }
 
     @Override

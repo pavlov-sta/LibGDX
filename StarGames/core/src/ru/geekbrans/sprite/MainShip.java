@@ -3,28 +3,17 @@ package ru.geekbrans.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrans.base.Sprite;
+import ru.geekbrans.base.Ship;
+
 import ru.geekbrans.math.Rect;
 import ru.geekbrans.pool.BulletPool;
 
-public class MainShip extends Sprite {
+public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
-
-    private TextureRegion bulletRegion;
-
-    private Rect worldBounds;
-    private BulletPool bulletPool;
-
-    private Vector2 v = new Vector2();
-    private Vector2 v0 = new Vector2(0.5f, 0);
-    private Vector2 v2 = new Vector2(0, 0.5f);
-    private Vector2 bulletV = new Vector2(0f, 0.5f);
 
     private boolean pressedLeft = false;
     private boolean pressedRight = false;
@@ -34,10 +23,6 @@ public class MainShip extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    private float reloadInterval;
-    private float reloadTimer;
-
-    private Sound shootSound;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -45,6 +30,13 @@ public class MainShip extends Sprite {
         bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
         reloadInterval = 0.2f;
+        v = new Vector2();
+        v0 = new Vector2(0.5f, 0);
+        v2 = new Vector2(0, 0.5f);
+        bulletV = new Vector2(0f, 0.5f);
+        bulletHeight = 0.01f;
+        damage = 1;
+        hp = 15;
     }
 
     @Override
@@ -180,9 +172,6 @@ public class MainShip extends Sprite {
         return false;
     }
 
-    public void dispose() {
-    shootSound.dispose();
-    }
     private void moveRight() {
         v.set(v0);
     }
@@ -201,11 +190,5 @@ public class MainShip extends Sprite {
 
     private void stop() {
         v.setZero();
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1);
-        shootSound.play();
     }
 }
