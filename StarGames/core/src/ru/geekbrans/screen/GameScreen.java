@@ -12,6 +12,7 @@ import ru.geekbrans.base.BaseScreen;
 import ru.geekbrans.pool.BulletPool;
 import ru.geekbrans.pool.EnemyPool;
 import ru.geekbrans.sprite.Background;
+import ru.geekbrans.sprite.Enemy;
 import ru.geekbrans.sprite.MainShip;
 
 import ru.geekbrans.sprite.Star;
@@ -58,6 +59,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollisions();
         freeAllDestroyedActiveSprites();
         draw();
     }
@@ -94,6 +96,15 @@ public class GameScreen extends BaseScreen {
         enemyGenerator.generate(delta);
     }
 
+    private void checkCollisions() {
+        for (Enemy e : enemyPool.getActiveObjects()) {
+            if (mainShip.getLeft() > e.getRight() || mainShip.getRight() < e.getLeft() || mainShip.getBottom() > e.getTop() || mainShip.getTop() < e.getBottom()) {
+            } else {
+                e.destroy();
+            }
+        }
+    }
+
     private void freeAllDestroyedActiveSprites() {
         bulletPool.freeAllDestroyedActiveSprites();
         enemyPool.freeAllDestroyedActiveSprites();
@@ -124,4 +135,5 @@ public class GameScreen extends BaseScreen {
         mainShip.keyUp(keycode);
         return false;
     }
+
 }
