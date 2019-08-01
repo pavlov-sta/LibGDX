@@ -10,6 +10,7 @@ import ru.geekbrans.base.Ship;
 
 import ru.geekbrans.math.Rect;
 import ru.geekbrans.pool.BulletPool;
+import ru.geekbrans.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
@@ -24,11 +25,12 @@ public class MainShip extends Ship {
     private int rightPointer = INVALID_POINTER;
 
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         reloadInterval = 0.2f;
         v = new Vector2();
         v0 = new Vector2(0.5f, 0);
@@ -36,7 +38,7 @@ public class MainShip extends Ship {
         bulletV = new Vector2(0f, 0.5f);
         bulletHeight = 0.01f;
         damage = 1;
-        hp = 15;
+        hp = 10;
     }
 
     @Override
@@ -170,6 +172,15 @@ public class MainShip extends Ship {
             }
         }
         return false;
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(
+                bullet.getRight() < getLeft()
+                        || bullet.getLeft() > getRight()
+                        || bullet.getBottom() > pos.y
+                        || bullet.getTop() < getBottom()
+        );
     }
 
     private void moveRight() {

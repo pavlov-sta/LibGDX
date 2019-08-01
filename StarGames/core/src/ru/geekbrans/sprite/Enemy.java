@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrans.base.Ship;
 import ru.geekbrans.math.Rect;
 import ru.geekbrans.pool.BulletPool;
+import ru.geekbrans.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
@@ -15,10 +16,11 @@ public class Enemy extends Ship {
 
     private Vector2 descentV = new Vector2(0, -0.15f);
 
-    public Enemy(BulletPool bulletPool, Rect worldBounds) {
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
+        this.explosionPool = explosionPool;
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
@@ -27,6 +29,7 @@ public class Enemy extends Ship {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
         pos.mulAdd(v, delta);
         switch (state) {
             case DESCENT:
@@ -73,4 +76,12 @@ public class Enemy extends Ship {
         state = State.DESCENT;
     }
 
+    public boolean isBulletCollision(Rect bullet) {
+        return !(
+                bullet.getRight() < getLeft()
+                        || bullet.getLeft() > getRight()
+                        || bullet.getBottom() > getTop()
+                        || bullet.getTop() < pos.y
+        );
+    }
 }

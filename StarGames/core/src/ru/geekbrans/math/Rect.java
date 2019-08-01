@@ -1,15 +1,13 @@
 package ru.geekbrans.math;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrans.base.Ship;
 
 /**
  * Прямоугольник
  */
 public class Rect {
-
     public final Vector2 pos = new Vector2(); // позиция по центру
     protected float halfWidth; // половина ширины
     protected float halfHeight; // половина высоты
@@ -60,8 +58,8 @@ public class Rect {
         return halfHeight * 2f;
     }
 
-    public void set(Ship ship, TextureRegion bulletRegion, Vector2 pos, Vector2 bulletV, float bulletHeight, Rect from, int damage, int hp) {
-        this.pos.set(from.pos);
+    public void set(Rect from) {
+        pos.set(from.pos);
         halfWidth = from.halfWidth;
         halfHeight = from.halfHeight;
     }
