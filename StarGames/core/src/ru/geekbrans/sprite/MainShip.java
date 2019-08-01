@@ -202,4 +202,10 @@ public class MainShip extends Ship {
     private void stop() {
         v.setZero();
     }
+
+    public void restartMainShip(Rect worldBounds) {
+        hp = 10;
+        setHeightProportion(0.15f);
+        setBottom(worldBounds.getBottom() + 0.05f);
+    }
 }

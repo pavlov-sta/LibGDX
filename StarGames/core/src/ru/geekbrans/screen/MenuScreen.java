@@ -115,6 +115,4 @@ public class MenuScreen extends BaseScreen {
         buttonPlay.draw(batch);
         batch.end();
     }
-
-
 }
