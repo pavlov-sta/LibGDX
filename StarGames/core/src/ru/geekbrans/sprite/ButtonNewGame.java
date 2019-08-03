@@ -7,11 +7,11 @@ import ru.geekbrans.base.ScaledTouchUpButton;
 import ru.geekbrans.math.Rect;
 import ru.geekbrans.screen.GameScreen;
 
-public class NewGame extends ScaledTouchUpButton {
+public class ButtonNewGame extends ScaledTouchUpButton {
 
     private GameScreen gameScreen;
 
-    public NewGame(TextureAtlas atlas, GameScreen gameScreen) {
+    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
         this.gameScreen = gameScreen;
     }
@@ -24,6 +24,6 @@ public class NewGame extends ScaledTouchUpButton {
 
     @Override
     public void action() {
-        gameScreen.restart();
+        gameScreen.starNewGame();
     }
 }

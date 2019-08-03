@@ -19,13 +19,11 @@ import ru.geekbrans.pool.EnemyPool;
 import ru.geekbrans.pool.ExplosionPool;
 import ru.geekbrans.sprite.Background;
 import ru.geekbrans.sprite.Bullet;
-import ru.geekbrans.sprite.ButtonExit;
-import ru.geekbrans.sprite.ButtonPlay;
 import ru.geekbrans.sprite.Enemy;
-import ru.geekbrans.sprite.GameOver;
 import ru.geekbrans.sprite.MainShip;
 
-import ru.geekbrans.sprite.NewGame;
+import ru.geekbrans.sprite.MessageGameOver;
+import ru.geekbrans.sprite.ButtonNewGame;
 import ru.geekbrans.sprite.Star;
 import ru.geekbrans.math.Rect;
 import ru.geekbrans.utils.EnemyGenerator;
@@ -44,8 +42,8 @@ public class GameScreen extends BaseScreen {
     private EnemyPool enemyPool;
     private ExplosionPool explosionPool;
     private EnemyGenerator enemyGenerator;
-    private GameOver gameOver;
-    private NewGame newGame;
+    private MessageGameOver messageGameOver;
+    private ButtonNewGame newGame;
 
     private Star[] starArray;
     private MainShip mainShip;
@@ -84,8 +82,8 @@ public class GameScreen extends BaseScreen {
         enemyPool = new EnemyPool(bulletPool, explosionPool, worldBounds);
         enemyGenerator = new EnemyGenerator(enemyPool, atlas, worldBounds);
         mainShip = new MainShip(atlas, bulletPool, explosionPool);
-        gameOver = new GameOver(atlas);
-        newGame = new NewGame(atlas,this);
+        messageGameOver = new MessageGameOver(atlas);
+        newGame = new ButtonNewGame(atlas, this);
         music.setLooping(true);
         music.setVolume(0.5f);
         music.play();
@@ -111,7 +109,7 @@ public class GameScreen extends BaseScreen {
         }
         freeAllDestroyedActiveSprites();
         mainShip.resize(worldBounds);
-        gameOver.resize(worldBounds);
+        messageGameOver.resize(worldBounds);
         newGame.resize(worldBounds);
 
     }
@@ -210,7 +208,7 @@ public class GameScreen extends BaseScreen {
 
         }
         if (state == State.GAME_OVER) {
-            gameOver.draw(batch);
+            messageGameOver.draw(batch);
             newGame.draw(batch);
         }
         batch.end();
@@ -220,9 +218,9 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING) {
             mainShip.touchDown(touch, pointer, button);
+        } else if (state == State.GAME_OVER) {
+            newGame.touchDown(touch, pointer, button);
         }
-        newGame.touchDown(touch, pointer, button);
-        gameOver.touchDown(touch, pointer, button);
         return false;
     }
 
@@ -230,9 +228,9 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING) {
             mainShip.touchUp(touch, pointer, button);
+        } else if (state == State.GAME_OVER) {
+            newGame.touchUp(touch, pointer, button);
         }
-        newGame.touchUp(touch, pointer, button);
-        gameOver.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -259,6 +257,15 @@ public class GameScreen extends BaseScreen {
         return false;
     }
 
+    public void starNewGame() {
+        state = State.PLAYING;
+
+        bulletPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
+        mainShip.restartMainShip(worldBounds);
+    }
+
     private void pauseOn() {
         stateBuff = state;
         state = State.PAUSE;
@@ -270,9 +277,5 @@ public class GameScreen extends BaseScreen {
         music.play();
     }
 
-    public void restart() {
-        mainShip.restartMainShip(worldBounds);
-        state = State.PLAYING;
-    }
 
 }

@@ -15,6 +15,7 @@ import ru.geekbrans.pool.ExplosionPool;
 public class MainShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
+    private  static  final  int HP = 100;
 
     private boolean pressedLeft = false;
     private boolean pressedRight = false;
@@ -38,7 +39,7 @@ public class MainShip extends Ship {
         bulletV = new Vector2(0f, 0.5f);
         bulletHeight = 0.01f;
         damage = 1;
-        hp = 10;
+        hp = HP;
     }
 
     @Override
@@ -204,8 +205,15 @@ public class MainShip extends Ship {
     }
 
     public void restartMainShip(Rect worldBounds) {
-        hp = 10;
-        setHeightProportion(0.15f);
-        setBottom(worldBounds.getBottom() + 0.05f);
+        stop();
+        pressedRight = false;
+        pressedUP = false;
+        pressedDOWN = false;
+        pressedLeft = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        hp = HP;
+        pos.x = worldBounds.pos.x;
+        flushDestroy();
     }
 }
