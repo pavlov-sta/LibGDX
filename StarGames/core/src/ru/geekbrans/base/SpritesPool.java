@@ -16,10 +16,10 @@ public abstract class SpritesPool<T extends Sprite> {
     protected abstract T newObject();
     public T obtain() {
         T object;
-        if (freeObjects.isEmpty()) {
+        if (freeObjects.isEmpty()) { // если в списке нечене нет то создаем новый
             object = newObject();
         } else {
-            object = freeObjects.remove(freeObjects.size() - 1);
+            object = freeObjects.remove(freeObjects.size() - 1); // если что то есть то удаляем один объект
         }
         activeObjects.add(object);
         //System.out.println(this.getClass().getName() + " active/free:" + activeObjects.size() + "/" + freeObjects.size());

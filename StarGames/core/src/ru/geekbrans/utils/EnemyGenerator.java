@@ -32,7 +32,8 @@ public class EnemyGenerator {
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 2f;
     private static final int ENEMY_BIG_HP = 10;
 
-    private float generateInterval = 4f;
+    private Rect worldBounds;
+    private float generateInterval;
     private float generateTimer;
 
     private TextureRegion[] enemySmallRegions;
@@ -45,7 +46,9 @@ public class EnemyGenerator {
 
     private TextureRegion bulletRegion;
     private EnemyPool enemyPool;
-    private Rect worldBounds;
+
+
+    private int level;
 
     public EnemyGenerator(EnemyPool enemyPool, TextureAtlas atlas, Rect worldBounds) {
         this.enemyPool = enemyPool;
@@ -59,8 +62,21 @@ public class EnemyGenerator {
         bulletRegion = atlas.findRegion("bulletEnemy");
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int frags) {
+        level = frags / 5 + 1;
+        if (level <= 4) {
+            generateInterval = 4f;
+        } else if (level >= 3 && level <= 6) {
+            generateInterval = 3f;
+        } else if (level >= 7 && level <= 10) {
+            generateInterval = 3f;
+        } else if (level >= 11 && level <= 15) {
+            generateInterval = 2f;
+        } else {
+            generateInterval = 1f;
+        }
         generateTimer += delta;
+
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
             Enemy enemy = enemyPool.obtain();
@@ -72,7 +88,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_DAMAGE,
+                        ENEMY_SMALL_DAMAGE * level,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP
@@ -84,7 +100,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_DAMAGE,
+                        ENEMY_MEDIUM_DAMAGE * level,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
                         ENEMY_MEDIUM_HP
@@ -96,7 +112,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_DAMAGE,
+                        ENEMY_BIG_DAMAGE * level,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP
@@ -108,6 +124,10 @@ public class EnemyGenerator {
             );
             enemy.setBottom(worldBounds.getTop());
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 
 }

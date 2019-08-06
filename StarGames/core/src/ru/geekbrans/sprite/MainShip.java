@@ -3,6 +3,7 @@ package ru.geekbrans.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -14,8 +15,10 @@ import ru.geekbrans.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
+
+    private static final float V_LEN = 1.5f;
     private static final int INVALID_POINTER = -1;
-    private  static  final  int HP = 100;
+    private static final int HP = 100;
 
     private boolean pressedLeft = false;
     private boolean pressedRight = false;
@@ -59,17 +62,21 @@ public class MainShip extends Ship {
             reloadTimer = 0f;
             shoot();
         }
-        if (getLeft() > worldBounds.getRight()) {
+        if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
+            stop();
         }
-        if (getRight() < worldBounds.getLeft()) {
+        if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
+            stop();
         }
-        if (getTop() > worldBounds.getTop()) {
-            setBottom(worldBounds.getBottom());
+        if (getTop() > 0.1f) {
+            setTop(0.1f);
+            stop();
         }
         if (getBottom() < worldBounds.getBottom()) {
-            setTop(worldBounds.getTop());
+            setBottom(worldBounds.getBottom());
+            stop();
         }
     }
 
@@ -139,7 +146,7 @@ public class MainShip extends Ship {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        if (touch.x < worldBounds.pos.x) {
+        /*if (touch.x < worldBounds.pos.x) {
             if (leftPointer != INVALID_POINTER) {
                 return false;
             }
@@ -151,13 +158,13 @@ public class MainShip extends Ship {
             }
             rightPointer = pointer;
             moveRight();
-        }
+        }*/
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        if (pointer == leftPointer) {
+        /*if (pointer == leftPointer) {
             leftPointer = INVALID_POINTER;
             if (rightPointer != INVALID_POINTER) {
                 moveRight();
@@ -171,6 +178,17 @@ public class MainShip extends Ship {
             } else {
                 stop();
             }
+        }*/
+        stop();
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        if (pos.x > touch.x + halfWidth || pos.x < touch.x - halfWidth || pos.y > touch.y + halfHeight || pos.y < touch.y - halfHeight) {
+            v.set(touch.cpy().sub(pos).setLength(V_LEN));
+        } else {
+            stop();
         }
         return false;
     }

@@ -12,15 +12,18 @@ import ru.geekbrans.pool.ExplosionPool;
 public class Enemy extends Ship {
 
     private enum State {DESCENT, FIGHT}
+
     private State state;
+    private MainShip mainShip;
 
     private Vector2 descentV = new Vector2(0, -0.15f);
 
-    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, MainShip mainShip) {
         shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         this.explosionPool = explosionPool;
+        this.mainShip = mainShip;
         v = new Vector2();
         v0 = new Vector2();
         bulletV = new Vector2();
@@ -45,7 +48,7 @@ public class Enemy extends Ship {
                     shoot();
                 }
                 if (getBottom() < worldBounds.getBottom()) {
-                    destroy();
+                    setTop(worldBounds.getTop());
                 }
                 break;
         }

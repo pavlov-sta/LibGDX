@@ -97,6 +97,7 @@ public class MenuScreen extends BaseScreen {
         return false;
     }
 
+
     private void update(float delta) {
         for (Star star:starArray) {
             star.update(delta);
